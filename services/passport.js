@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const LinkedinStrategy = require('passport-linkedin-oauth2').Strategy;
-const GithubStrategy = require('passport-github2').Strategy;
+//const LinkedinStrategy = require('passport-linkedin-oauth2').Strategy;
+//const GithubStrategy = require('passport-github2').Strategy;
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
 
@@ -23,9 +23,10 @@ passport.use(
             clientID: keys.googleClientID,
             clientSecret: keys.googleClientSecret,
             callbackURL: '/auth/google/callback',
+            proxy: true,
         },
         (accessToken, refreshToken, profile, done) => {
-            console.log('google', accessToken, profile);
+            console.log('google', accessToken, profile.id, keys.mongoURI);
             User.findOne({ googleId: profile.id }).then(existingUser => {
                 if (existingUser) {
                     // we already have a record with the given profile ID
@@ -40,7 +41,7 @@ passport.use(
     ),
 );
 
-passport.use(
+/*passport.use(
     new GithubStrategy(
         {
             clientID: keys.githubClientID,
@@ -83,4 +84,4 @@ passport.use(
             });
         },
     ),
-);
+);*/
